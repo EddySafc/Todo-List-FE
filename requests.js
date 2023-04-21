@@ -18,8 +18,8 @@ export const deleteDailyToDo = (Id) => {
 
 export const postDailyToDo = (item, id) => {
   return axios.post(`https://calm-gold-angelfish-wig.cyclic.app/api/dailys`, {
-    todo_id: id,
-    todo_name: item,
+    body: item,
+    item_id: id,
   });
 };
 
@@ -37,9 +37,10 @@ export const deleteWeeklyToDo = (Id) => {
   );
 };
 
-export const postWeeklyToDo = (item) => {
-  return axios.post(`https://calm-gold-angelfish-wig.cyclic.app/api/dailys`, {
-    todo_name: item,
+export const postWeeklyToDo = (item, id) => {
+  return axios.post(`https://calm-gold-angelfish-wig.cyclic.app/api/weeklys`, {
+    body: item,
+    item_id: id,
   });
 };
 
@@ -57,8 +58,9 @@ export const deleteMonthlyToDo = (Id) => {
   );
 };
 
-export const postMonthlyToDo = (item) => {
-  return axios.post(`https://calm-gold-angelfish-wig.cyclic.app/api/dailys`, {
-    todo_name: item,
+export const postMonthlyToDo = (item, id) => {
+  return axios.post(`https://calm-gold-angelfish-wig.cyclic.app/api/monthlys`, {
+    body: item,
+    item_id: id,
   });
 };
