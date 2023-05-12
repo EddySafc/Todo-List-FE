@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   getDailyToDos,
   getWeeklyToDos,
@@ -25,6 +26,8 @@ import {
   deleteWeeklyToDo,
   deleteMonthlyToDo,
 } from "./requests";
+import LoginScreen from "./settingsScreens/LoginScreen";
+import HomeScreen from "./settingsScreens/HomeScreen";
 
 export default function App() {
   return (
@@ -72,30 +75,14 @@ function WeeklysScreen() {
 
   const addToDoHandler = () => {
     if (weeklyToDos.length === 0) {
-      if (weeklyToDos.length === 0) {
-        setWeeklyToDos((currentToDos) => [
-          ...currentToDos,
-          {
-            todo_id: 1,
-            todo_name: enteredToDoText,
-          },
-        ]);
-        postWeeklyToDo(enteredToDoText, 1);
-      }
-      if (weeklyToDos.length !== 0) {
-        setWeeklyToDos((currentToDos) => [
-          ...currentToDos,
-          {
-            todo_id: currentToDos[currentToDos.length - 1]["todo_id"] + 1,
-            todo_name: enteredToDoText,
-          },
-        ]);
-        postWeeklyToDo(
-          enteredToDoText,
-          weeklyToDos[weeklyToDos.length - 1]["todo_id"] + 1
-        );
-      }
-      setEnteredToDoText("");
+      setWeeklyToDos((currentToDos) => [
+        ...currentToDos,
+        {
+          todo_id: 1,
+          todo_name: enteredToDoText,
+        },
+      ]);
+      postWeeklyToDo(enteredToDoText, 1);
     }
     if (weeklyToDos.length !== 0) {
       setWeeklyToDos((currentToDos) => [
@@ -105,8 +92,11 @@ function WeeklysScreen() {
           todo_name: enteredToDoText,
         },
       ]);
+      postWeeklyToDo(
+        enteredToDoText,
+        weeklyToDos[weeklyToDos.length - 1]["todo_id"] + 1
+      );
     }
-    postWeeklyToDo(enteredToDoText);
     setEnteredToDoText("");
   };
 
@@ -231,6 +221,25 @@ function MonthlysScreen() {
   );
 }
 
+const Stack = createNativeStackNavigator();
+
+const SettingsScreen = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false, title: "Welcome" }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false, title: "Welcome" }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -289,6 +298,21 @@ export default function App() {
             }}
             name="monthlys"
             component={MonthlysScreen}
+          />
+          <Tab.Screen
+            options={{
+              tabBarIcon: (tabInfo) => {
+                return (
+                  <Ionicons
+                    name="construct-outline"
+                    size={24}
+                    color={tabInfo.focused ? "#006600" : "#8e8e93"}
+                  />
+                );
+              },
+            }}
+            name="Settings"
+            component={SettingsScreen}
           />
         </Tab.Navigator>
       </NavigationContainer>
