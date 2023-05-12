@@ -26,49 +26,7 @@ import {
   deleteMonthlyToDo,
 } from "./requests";
 
-function DailysScreen() {
-  const [dailyToDos, setDailyToDos] = useState([]);
-  const [enteredToDoText, setEnteredToDoText] = useState("");
-
-  const textInputHandler = (enteredText) => {
-    setEnteredToDoText(enteredText);
-  };
-
-  const addToDoHandler = () => {
-    if (dailyToDos.length === 0) {
-      setDailyToDos((currentToDos) => [
-        ...currentToDos,
-        {
-          todo_id: 1,
-          todo_name: enteredToDoText,
-        },
-      ]);
-      postDailyToDo(enteredToDoText, 1);
-    }
-    if (dailyToDos.length !== 0) {
-      setDailyToDos((currentToDos) => [
-        ...currentToDos,
-        {
-          todo_id: currentToDos[currentToDos.length - 1]["todo_id"] + 1,
-          todo_name: enteredToDoText,
-        },
-      ]);
-      postDailyToDo(
-        enteredToDoText,
-        dailyToDos[dailyToDos.length - 1]["todo_id"] + 1
-      );
-    }
-    setEnteredToDoText("");
-  };
-
-  useEffect(() => {
-    getDailyToDos().then((toDos) => {
-      setDailyToDos(toDos.result);
-    });
-  }, []);
-
-  console.log("dailyToDos:", dailyToDos);
-
+export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.subheader}>Daily To Do List:</Text>
@@ -341,40 +299,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "purple",
-    padding: 30,
-    paddingTop: 50,
-  },
-  input_container: {
-    flexDirection: "row",
-    margin: 20,
-    marginBottom: 35,
-  },
-  text_input: {
-    marginRight: 30,
-    paddingHorizontal: 30,
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "pink",
-    backgroundColor: "white",
-  },
-  list_item: { padding: 12, alignItems: "center" },
-  list_text: {
-    width: 300,
-    fontSize: 17,
-    backgroundColor: "gold",
-    padding: 5,
-    borderRadius: 5,
-  },
-  subheader: {
-    width: "100%",
-    backgroundColor: "pink",
-    padding: 8,
-    marginBottom: 25,
-    borderRadius: 8,
-    fontSize: 20,
-    fontWeight: "bold",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
