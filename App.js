@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   getDailyToDos,
   getWeeklyToDos,
@@ -25,50 +26,10 @@ import {
   deleteWeeklyToDo,
   deleteMonthlyToDo,
 } from "./requests";
+import LoginScreen from "./settingsScreens/LoginScreen";
+import HomeScreen from "./settingsScreens/HomeScreen";
 
-function DailysScreen() {
-  const [dailyToDos, setDailyToDos] = useState([]);
-  const [enteredToDoText, setEnteredToDoText] = useState("");
-
-  const textInputHandler = (enteredText) => {
-    setEnteredToDoText(enteredText);
-  };
-
-  const addToDoHandler = () => {
-    if (dailyToDos.length === 0) {
-      setDailyToDos((currentToDos) => [
-        ...currentToDos,
-        {
-          todo_id: 1,
-          todo_name: enteredToDoText,
-        },
-      ]);
-      postDailyToDo(enteredToDoText, 1);
-    }
-    if (dailyToDos.length !== 0) {
-      setDailyToDos((currentToDos) => [
-        ...currentToDos,
-        {
-          todo_id: currentToDos[currentToDos.length - 1]["todo_id"] + 1,
-          todo_name: enteredToDoText,
-        },
-      ]);
-      postDailyToDo(
-        enteredToDoText,
-        dailyToDos[dailyToDos.length - 1]["todo_id"] + 1
-      );
-    }
-    setEnteredToDoText("");
-  };
-
-  useEffect(() => {
-    getDailyToDos().then((toDos) => {
-      setDailyToDos(toDos.result);
-    });
-  }, []);
-
-  console.log("dailyToDos:", dailyToDos);
-
+export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.subheader}>Daily To Do List:</Text>
@@ -114,30 +75,14 @@ function WeeklysScreen() {
 
   const addToDoHandler = () => {
     if (weeklyToDos.length === 0) {
-      if (weeklyToDos.length === 0) {
-        setWeeklyToDos((currentToDos) => [
-          ...currentToDos,
-          {
-            todo_id: 1,
-            todo_name: enteredToDoText,
-          },
-        ]);
-        postWeeklyToDo(enteredToDoText, 1);
-      }
-      if (weeklyToDos.length !== 0) {
-        setWeeklyToDos((currentToDos) => [
-          ...currentToDos,
-          {
-            todo_id: currentToDos[currentToDos.length - 1]["todo_id"] + 1,
-            todo_name: enteredToDoText,
-          },
-        ]);
-        postWeeklyToDo(
-          enteredToDoText,
-          weeklyToDos[weeklyToDos.length - 1]["todo_id"] + 1
-        );
-      }
-      setEnteredToDoText("");
+      setWeeklyToDos((currentToDos) => [
+        ...currentToDos,
+        {
+          todo_id: 1,
+          todo_name: enteredToDoText,
+        },
+      ]);
+      postWeeklyToDo(enteredToDoText, 1);
     }
     if (weeklyToDos.length !== 0) {
       setWeeklyToDos((currentToDos) => [
@@ -147,8 +92,11 @@ function WeeklysScreen() {
           todo_name: enteredToDoText,
         },
       ]);
+      postWeeklyToDo(
+        enteredToDoText,
+        weeklyToDos[weeklyToDos.length - 1]["todo_id"] + 1
+      );
     }
-    postWeeklyToDo(enteredToDoText);
     setEnteredToDoText("");
   };
 
@@ -273,6 +221,25 @@ function MonthlysScreen() {
   );
 }
 
+const Stack = createNativeStackNavigator();
+
+const SettingsScreen = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false, title: "Welcome" }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false, title: "Welcome" }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -332,6 +299,21 @@ export default function App() {
             name="monthlys"
             component={MonthlysScreen}
           />
+          <Tab.Screen
+            options={{
+              tabBarIcon: (tabInfo) => {
+                return (
+                  <Ionicons
+                    name="construct-outline"
+                    size={24}
+                    color={tabInfo.focused ? "#006600" : "#8e8e93"}
+                  />
+                );
+              },
+            }}
+            name="Settings"
+            component={SettingsScreen}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </>
@@ -341,40 +323,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "purple",
-    padding: 30,
-    paddingTop: 50,
-  },
-  input_container: {
-    flexDirection: "row",
-    margin: 20,
-    marginBottom: 35,
-  },
-  text_input: {
-    marginRight: 30,
-    paddingHorizontal: 30,
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "pink",
-    backgroundColor: "white",
-  },
-  list_item: { padding: 12, alignItems: "center" },
-  list_text: {
-    width: 300,
-    fontSize: 17,
-    backgroundColor: "gold",
-    padding: 5,
-    borderRadius: 5,
-  },
-  subheader: {
-    width: "100%",
-    backgroundColor: "pink",
-    padding: 8,
-    marginBottom: 25,
-    borderRadius: 8,
-    fontSize: 20,
-    fontWeight: "bold",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
